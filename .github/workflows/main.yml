@@ -1,0 +1,29 @@
+name: Atualizar Keys
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-keys:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configurar Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Atualizar keys.json
+        run: |
+          echo '${{ github.event.inputs.data }}' > keys.json
+
+      - name: Commit e Push
+        run: |
+          git add keys.json
+          git commit -m "Atualização automática das keys"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.API_TOKEN }}
